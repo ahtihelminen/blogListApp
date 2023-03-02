@@ -12,6 +12,10 @@ const cors = require('cors')
 const config = require('./utils/config')
 const middleware = require('./utils/middleware')
 
+if (process.env.NODE_ENV === 'test') {
+  const testingRouter = require('./controllers/testing')
+  app.use('/api/testing', testingRouter)
+}
 
 mongoose.connect(config.MONGO_URL)
 
@@ -23,6 +27,8 @@ app.use(middleware.tokenExtractor)
 app.use('/api/blogs', middleware.userExtractor, blogRouter)
 app.use('/api/users', usersRouter)
 app.use('/api/login', loginRouter)
+
+
 
 app.use(middleware.errorHandler)
 

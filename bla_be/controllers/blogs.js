@@ -5,26 +5,25 @@ const Blog = require('../models/blog')
 const User = require('../models/user')
 const config = require('../utils/config')
 
-
 blogRouter.get('/', async (request, response) => {
     
-    const blogs = await Blog
-        .find({})
-        .populate('user', { name: 1, username: 1 })
-    console.log(blogs)
-    response.json(blogs)
+  const blogs = await Blog
+    .find({})
+    .populate('user', { name: 1, username: 1 })
+  console.log(blogs)
+  response.json(blogs)
 })
 
 blogRouter.post('/', async (request, response) => {
-    const body = request.body
+  const body = request.body
 
-    const decodedToken = jwt.verify(request.token, config.SECRET)
+  const decodedToken = jwt.verify(request.token, config.SECRET)
     
-    if (!request.token || !decodedToken.id) {
-        return response.status(401).json({
-            error: 'token missing or invalid'
-        })
-    }
+  if (!request.token || !decodedToken.id) {
+    return response.status(401).json({
+      error: 'token missing or invalid'
+    })
+  }
     
     const user = await User.findById(decodedToken.id)
 

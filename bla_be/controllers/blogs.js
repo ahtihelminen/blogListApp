@@ -10,7 +10,6 @@ blogRouter.get('/', async (request, response) => {
   const blogs = await Blog
     .find({})
     .populate('user', { name: 1, username: 1 })
-  console.log(blogs)
   response.json(blogs)
 })
 
@@ -25,36 +24,50 @@ blogRouter.post('/', async (request, response) => {
     })
   }
     
-    const user = await User.findById(decodedToken.id)
-
-    const blog = new Blog({
-        title: body.title,
-        author: body.author,
-        url: body.url,
-        user: user._id,
-        likes: 0
-    })
-
-    if (!blog.title || !blog.url) {
-        return response.status(400).end()
+  const user = await User.findById(decodedToken.id)
+  
+  var blog_ = {}
+  
+  if(body.likes){
+    blog_ = {
+      title: body.title,
+      author: body.author,
+      url: body.url,
+      user: user._id,
+      likes: body.likes
     }
+    console.log(blog_)
 
-    const savedBlog = await blog.save()
-    user.blogs = user.blogs.concat(savedBlog._id)
-    await user.save()
+  } else {
+    blog_ = {
+      title: body.title,
+      author: body.author,
+      url: body.url,
+      user: user._id
+    }
+  }
+  const blog = new Blog(blog_)
 
-    response.status(201).json(savedBlog)
+  if (!blog.title || !blog.url) {
+    return response.status(400).end()
+  }
+
+  const savedBlog = await blog.save()
+  user.blogs = user.blogs.concat(savedBlog._id)
+  await user.save()
+
+  response.status(201).json(savedBlog)
 })
 
 blogRouter.delete('/:id', async (request, response) => {
-    const id = request.params.id
+  const id = request.params.id
 
-    const decodedToken = jwt.verify(request.token, config.SECRET)
-    if (!request.token || !decodedToken) {
-        return response.status(400).json({
-            error: 'token missing or invalid'
-        })
-    }
+  const decodedToken = jwt.verify(request.token, config.SECRET)
+  if (!request.token || !decodedToken) {
+    return response.status(400).json({
+      error: 'token missing or invalid'
+    })
+  }
 
     const res = await Blog.findByIdAndDelete(id)
     if (res === null) {

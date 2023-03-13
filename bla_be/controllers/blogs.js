@@ -36,8 +36,6 @@ blogRouter.post('/', async (request, response) => {
       user: user._id,
       likes: body.likes
     }
-    console.log(blog_)
-
   } else {
     blog_ = {
       title: body.title,
@@ -69,32 +67,32 @@ blogRouter.delete('/:id', async (request, response) => {
     })
   }
 
-    const res = await Blog.findByIdAndDelete(id)
-    if (res === null) {
-        return response.status(400).json({
-            error: 'content not found'
-        })
-    }
-    const user = request.user
-    user.blogs = user.blogs.filter(blog => blog.id !== id)
-    await user.save()
+  const res = await Blog.findByIdAndDelete(id)
+  if (res === null) {
+    return response.status(400).json({
+      error: 'content not found'
+    })
+  }
+  const user = request.user
+  user.blogs = user.blogs.filter(blog => blog.id !== id)
+  await user.save()
 
-    response.status(204).end()
+  response.status(204).end()
 })
 
 blogRouter.put('/:id', async (request, response) => {
-    const id = request.params.id
-    const body = request.body
-    
-    const res = await Blog.findByIdAndUpdate(id, body, { new: true })
-    if (res === null) {
-        return response.status(400).json({
-            error: 'content not found'
-        })
-    }
+  const id = request.params.id
+  const body = request.body
+  
+  const res = await Blog.findByIdAndUpdate(id, body, { new: true })
+  if (res === null) {
+    return response.status(400).json({
+      error: 'content not found'
+    })
+  }
 
 
-    response.status(204).json(body)
+  response.status(204).json(body)
 })
 
 module.exports = blogRouter

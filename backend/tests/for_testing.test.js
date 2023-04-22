@@ -5,10 +5,10 @@ const helper = require('./test_helper')
 describe('test', () => {
   test('dummy returns one', () => {
     const blog = []
-        
+
     const result = listHelper.dummy(blog)
     expect(result).toBe(1)
-  })    
+  })
 })
 
 describe('Total likes', () => {
@@ -20,7 +20,7 @@ describe('Total likes', () => {
 
 describe('Blog with most likes', () => {
   test('Blog with most likes is titled "Canonical string reduction"', () => {
-    const expResult =  {
+    const expResult = {
       title: 'Canonical string reduction',
       author: 'Edsger W. Dijkstra',
       likes: 12,
@@ -34,20 +34,18 @@ describe('Writer with most blogs', () => {
   test('Writer with most blogs is "Robert C. Martin"', () => {
     const expResult = {
       author: 'Robert C. Martin',
-      blogs: 3
+      blogs: 3,
     }
     const result = listHelper.mostBlogs(helper.initialBlogs)
     expect(result).toEqual(expResult)
   })
-    
 })
-
 
 describe('Writer with most likes', () => {
   test('Writer with most likes is "Edsger W. Dijkstra"', () => {
     const expResult = {
       author: 'Edsger W. Dijkstra',
-      likes: 17
+      likes: 17,
     }
     const result = listHelper.mostLikes(helper.initialBlogs)
     expect(result).toEqual(expResult)

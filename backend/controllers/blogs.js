@@ -6,10 +6,7 @@ const User = require('../models/user')
 const config = require('../utils/config')
 
 blogRouter.get('/', async (request, response) => {
-    
-  const blogs = await Blog
-    .find({})
-    .populate('user', { name: 1, username: 1 })
+  const blogs = await Blog.find({}).populate('user', { name: 1, username: 1 })
   response.json(blogs)
 })
 
@@ -17,31 +14,31 @@ blogRouter.post('/', async (request, response) => {
   const body = request.body
 
   const decodedToken = jwt.verify(request.token, config.SECRET)
-    
+
   if (!request.token || !decodedToken.id) {
     return response.status(401).json({
-      error: 'token missing or invalid'
+      error: 'token missing or invalid',
     })
   }
-    
+
   const user = await User.findById(decodedToken.id)
-  
+
   var blog_ = {}
-  
-  if(body.likes){
+
+  if (body.likes) {
     blog_ = {
       title: body.title,
       author: body.author,
       url: body.url,
       user: user._id,
-      likes: body.likes
+      likes: body.likes,
     }
   } else {
     blog_ = {
       title: body.title,
       author: body.author,
       url: body.url,
-      user: user._id
+      user: user._id,
     }
   }
   const blog = new Blog(blog_)
@@ -63,18 +60,18 @@ blogRouter.delete('/:id', async (request, response) => {
   const decodedToken = jwt.verify(request.token, config.SECRET)
   if (!request.token || !decodedToken) {
     return response.status(400).json({
-      error: 'token missing or invalid'
+      error: 'token missing or invalid',
     })
   }
 
   const res = await Blog.findByIdAndDelete(id)
   if (res === null) {
     return response.status(400).json({
-      error: 'content not found'
+      error: 'content not found',
     })
   }
   const user = request.user
-  user.blogs = user.blogs.filter(blog => blog.id !== id)
+  user.blogs = user.blogs.filter((blog) => blog.id !== id)
   await user.save()
 
   response.status(204).end()
@@ -83,14 +80,13 @@ blogRouter.delete('/:id', async (request, response) => {
 blogRouter.put('/:id', async (request, response) => {
   const id = request.params.id
   const body = request.body
-  
+
   const res = await Blog.findByIdAndUpdate(id, body, { new: true })
   if (res === null) {
     return response.status(400).json({
-      error: 'content not found'
+      error: 'content not found',
     })
   }
-
 
   response.status(204).json(body)
 })

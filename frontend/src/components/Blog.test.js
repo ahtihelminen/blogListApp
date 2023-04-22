@@ -6,58 +6,58 @@ import TogglableBlogs from './TogglableBlogs'
 import Blog from './Blog'
 
 describe('<TogglableBlogs />', () => {
-  let container
-  const blog = {
-    title: 'Test blog title',
-    author: 'Test Author',
-    url: 'testurl.com',
-    user: {
-      name: 'Test User'
+    let container
+    const blog = {
+        title: 'Test blog title',
+        author: 'Test Author',
+        url: 'testurl.com',
+        user: {
+            name: 'Test User',
+        },
     }
-  }
 
-  const mockLikeHandler = jest.fn(e => e.preventDefault())
+    const mockLikeHandler = jest.fn((e) => e.preventDefault())
 
+    beforeEach(() => {
+        container = render(
+            <TogglableBlogs buttonLabel="view" blog={blog}>
+                <Blog
+                    blog={blog}
+                    handleDeleteBlog={() => {}}
+                    handleLike={mockLikeHandler}
+                />
+            </TogglableBlogs>
+        ).container
+    })
 
-  beforeEach(() => {
-    container = render(
-      <TogglableBlogs buttonLabel='view' blog={blog}>
-        <Blog blog={blog} handleDeleteBlog={()=>{}} handleLike={mockLikeHandler} />
-      </TogglableBlogs>
-    ).container
-  })
+    test('renders its title and author', () => {
+        screen.getAllByText('Test blog title Test Author')
+    })
 
-  test('renders its title and author', () => {
-    screen.getAllByText('Test blog title Test Author')
-  })
+    test('in the beginning the children are not displayed', () => {
+        const div = container.querySelector('.childrenVisible')
+        expect(div).toHaveStyle('display: none')
+    })
 
-  test('in the beginning the children are not displayed', () => {
-    const div = container.querySelector('.childrenVisible')
-    expect(div).toHaveStyle('display: none')
-  })
+    test('after clicking "view" button -> children visible', async () => {
+        const user = userEvent.setup()
+        const button = screen.getByText('view')
 
-  test('after clicking "view" button -> children visible', async () => {
-    const user = userEvent.setup()
-    const button = screen.getByText('view')
+        window.document.getSelection = jest.fn()
 
-    window.document.getSelection = jest.fn()
-    
-    await user.click(button)
+        await user.click(button)
 
-    const div = container.querySelector('.childrenVisible')
-    expect(div).not.toHaveStyle('display: none')
-  })
+        const div = container.querySelector('.childrenVisible')
+        expect(div).not.toHaveStyle('display: none')
+    })
 
+    test('clicking like button twice calls handleLike twice', async () => {
+        const user = userEvent.setup()
+        const button = screen.getByText('like')
 
-  test('clicking like button twice calls handleLike twice', async () => {
-    const user = userEvent.setup()
-    const button = screen.getByText('like')
+        await user.click(button)
+        await user.click(button)
 
-    await user.click(button)
-    await user.click(button)
-
-    expect(mockLikeHandler.mock.calls).toHaveLength(2)
-  })
-  
+        expect(mockLikeHandler.mock.calls).toHaveLength(2)
+    })
 })
-

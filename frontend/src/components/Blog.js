@@ -22,7 +22,8 @@ const Blog = ({ blog, handleLike, handleDeleteBlog, username }) => {
 
   return (
     <div className="blogTest">
-      {username === blog.user.username ? (
+      {username === blog.user.username 
+      ? (
         <div>
           <form onSubmit={likeHandler}>
             {blog.url} <br></br>
@@ -39,7 +40,8 @@ const Blog = ({ blog, handleLike, handleDeleteBlog, username }) => {
             </button>
           </form>
         </div>
-      ) : (
+      ) 
+      : (
         <div>
           <form onSubmit={likeHandler}>
             {blog.url} <br></br>

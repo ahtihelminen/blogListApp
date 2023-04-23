@@ -1,6 +1,6 @@
 import React from 'react'
 import { useState, useEffect, useRef } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
 import LoginForm from './components/LoginForm'
 import LoggedIn from './components/LoggedIn'
@@ -9,18 +9,18 @@ import Togglable from './components/Togglable'
 import Headers from './components/Headers'
 import TogglableBlogs from './components/TogglableBlogs'
 
-import blogService from './services/blogs'
-import loginService from './services/login'
+import blogService from './services/blogsService'
+import loginService from './services/loginService'
 
 import './index.css'
 import CreateBlogForm from './components/BlogForm'
 import Blog from './components/Blog'
 
 import { setNotification } from './reducers/notificationReducer'
+import { initializeBlogs } from './reducers/blogsReducer'
 
 
 const App = () => {
-  const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
@@ -31,13 +31,8 @@ const App = () => {
   const dispatch = useDispatch()
 
   useEffect(() => {
-    async function getBlogs() {
-      const response = await blogService.getAll()
-      response.sort((a, b) => b.likes - a.likes)
-      setBlogs(response)
-    }
-    getBlogs()
-  }, [blogCreated, blogUpdated, blogRemoved])
+    dispatch(initializeBlogs())
+  }, [dispatch, blogCreated, blogUpdated, blogRemoved])
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedUser')
@@ -47,6 +42,8 @@ const App = () => {
       blogService.setToken(user.token)
     }
   }, [])
+
+  const blogs = useSelector(state => state.blogs)
 
   const handleLogin = async (event) => {
     event.preventDefault()

@@ -26,7 +26,7 @@ const App = () => {
   const [blogCreated, setBlogCreated] = useState(false)
   const [blogUpdated, setBlogUpdated] = useState(false)
   const [blogRemoved, setBlogRemoved] = useState(false)
- 
+
   const dispatch = useDispatch()
 
   useEffect(() => {
@@ -42,9 +42,8 @@ const App = () => {
     }
   }, [])
 
-  const blogs = useSelector(state => state.blogs)
-  const user = useSelector(state => state.user)
-
+  const blogs = useSelector((state) => state.blogs)
+  const user = useSelector((state) => state.user)
 
   const handleLogin = async (event) => {
     event.preventDefault()
@@ -61,18 +60,10 @@ const App = () => {
       dispatch(setUser(user))
       setUsername('')
       setPassword('')
-      dispatch(setNotification(
-        `Logged in as user ${username}`,
-        2,
-        5
-      ))
+      dispatch(setNotification(`Logged in as user ${username}`, 2, 5))
     } catch (exception) {
       console.log('wrong credentials')
-      dispatch(setNotification(
-        'wrong username or password',
-        1,
-        5
-      ))
+      dispatch(setNotification('wrong username or password', 1, 5))
     }
   }
 
@@ -88,18 +79,22 @@ const App = () => {
       if (response.status === 201) {
         blogFormRef.current.toggleVisibility()
         setBlogCreated(response)
-        dispatch(setNotification(
-          `${response.data.title} by ${response.data.author} created`,
-          2,
-          5
-        ))
+        dispatch(
+          setNotification(
+            `${response.data.title} by ${response.data.author} created`,
+            2,
+            5
+          )
+        )
       }
     } catch (exception) {
-      dispatch(setNotification(
-        `error in creating new blog: ${exception.message}`,
-        1,
-        5
-      ))
+      dispatch(
+        setNotification(
+          `error in creating new blog: ${exception.message}`,
+          1,
+          5
+        )
+      )
     }
   }
 
@@ -108,18 +103,18 @@ const App = () => {
     try {
       if (await dispatch(likeBlog(updatedBlog))) {
         setBlogUpdated(!blogUpdated)
-        dispatch(setNotification(
-          `Blog ${updatedBlog.title} by ${updatedBlog.author} liked!`,
-          3,
-          5
-        ))
+        dispatch(
+          setNotification(
+            `Blog ${updatedBlog.title} by ${updatedBlog.author} liked!`,
+            3,
+            5
+          )
+        )
       }
     } catch (exception) {
-      dispatch(setNotification(
-        `error while liking: ${exception.message}`,
-        1,
-        5
-      ))
+      dispatch(
+        setNotification(`error while liking: ${exception.message}`, 1, 5)
+      )
     }
   }
 
@@ -128,18 +123,18 @@ const App = () => {
     try {
       if (await dispatch(deleteBlog(blog))) {
         setBlogRemoved(!blogRemoved)
-        dispatch(setNotification(
-          `Blog ${blog.title} by ${blog.author} removed succesfully`,
-          2,
-          5
-        ))
+        dispatch(
+          setNotification(
+            `Blog ${blog.title} by ${blog.author} removed succesfully`,
+            2,
+            5
+          )
+        )
       }
     } catch (exception) {
-      dispatch(setNotification(
-        `error removing blog: ${exception.message}`,
-        1,
-        5
-      ))
+      dispatch(
+        setNotification(`error removing blog: ${exception.message}`, 1, 5)
+      )
     }
   }
 
@@ -148,7 +143,7 @@ const App = () => {
   return (
     <div>
       <Headers.one value={'Bloglistapp'} />
-      <Notification/>
+      <Notification />
       {user === null ? (
         <LoginForm
           username={username}

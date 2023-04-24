@@ -7,15 +7,10 @@ const userSlice = createSlice({
     setUser(state, action) {
       console.log(action.payload)
       return action.payload
-    },
+    }
   }
 })
 
-
-
-
 export const { setUser } = userSlice.actions
-
-
 
 export default userSlice.reducer

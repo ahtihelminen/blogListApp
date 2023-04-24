@@ -18,12 +18,11 @@ import Blog from './components/Blog'
 
 import { setNotification } from './reducers/notificationReducer'
 import { initializeBlogs, likeBlog, deleteBlog } from './reducers/blogsReducer'
-
+import { setUser } from './reducers/userReducer'
 
 const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [user, setUser] = useState(null)
   const [blogCreated, setBlogCreated] = useState(false)
   const [blogUpdated, setBlogUpdated] = useState(false)
   const [blogRemoved, setBlogRemoved] = useState(false)
@@ -38,12 +37,14 @@ const App = () => {
     const loggedUserJSON = window.localStorage.getItem('loggedUser')
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
-      setUser(user)
+      dispatch(setUser(user))
       blogService.setToken(user.token)
     }
   }, [])
 
   const blogs = useSelector(state => state.blogs)
+  const user = useSelector(state => state.user)
+
 
   const handleLogin = async (event) => {
     event.preventDefault()
@@ -57,7 +58,7 @@ const App = () => {
       window.localStorage.setItem('loggedUser', JSON.stringify(user))
 
       blogService.setToken(user.token)
-      setUser(user)
+      dispatch(setUser(user))
       setUsername('')
       setPassword('')
       dispatch(setNotification(
@@ -76,7 +77,7 @@ const App = () => {
   }
 
   const handleLogout = () => {
-    setUser(null)
+    dispatch(setUser(null))
     window.localStorage.removeItem('loggedUser')
   }
 

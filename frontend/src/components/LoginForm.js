@@ -40,12 +40,12 @@ const LoginForm = ({
   )
 }
 
-LoginForm.propTypes = {
+/*LoginForm.propTypes = {
   handleSubmit: PropTypes.string.isRequired,
   handleUsernameChange: PropTypes.string.isRequired,
   handlePasswordChange: PropTypes.string.isRequired,
   username: PropTypes.string.isRequired,
   password: PropTypes.string.isRequired
-}
+}*/
 
 export default LoginForm

@@ -17,16 +17,16 @@ import CreateBlogForm from './components/BlogForm'
 import Blog from './components/Blog'
 
 import { setNotification } from './reducers/notificationReducer'
-import { initializeBlogs } from './reducers/blogsReducer'
+import { initializeBlogs, likeBlog, deleteBlog } from './reducers/blogsReducer'
 
 
 const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-  const [blogCreated, setBlogCreated] = useState('')
-  const [blogUpdated, setBlogUpdated] = useState('')
-  const [blogRemoved, setBlogRemoved] = useState('')
+  const [blogCreated, setBlogCreated] = useState(false)
+  const [blogUpdated, setBlogUpdated] = useState(false)
+  const [blogRemoved, setBlogRemoved] = useState(false)
  
   const dispatch = useDispatch()
 
@@ -105,9 +105,8 @@ const App = () => {
   const handleLike = async (event, updatedBlog) => {
     event.preventDefault()
     try {
-      const response = await blogService.likeBlog(updatedBlog)
-      if (response.status === 204) {
-        setBlogUpdated(response)
+      if (await dispatch(likeBlog(updatedBlog))) {
+        setBlogUpdated(!blogUpdated)
         dispatch(setNotification(
           `Blog ${updatedBlog.title} by ${updatedBlog.author} liked!`,
           3,
@@ -126,9 +125,8 @@ const App = () => {
   const handleDeleteBlog = async (event, blog) => {
     event.preventDefault()
     try {
-      const response = await blogService.removeBlog(blog)
-      if (response.status === 204) {
-        setBlogRemoved(response)
+      if (await dispatch(deleteBlog(blog))) {
+        setBlogRemoved(!blogRemoved)
         dispatch(setNotification(
           `Blog ${blog.title} by ${blog.author} removed succesfully`,
           2,

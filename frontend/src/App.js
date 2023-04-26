@@ -56,12 +56,11 @@ const App = () => {
   useEffect(() => {
     axios.get('/api/users').then(response => {
       setUsers(response.data)
-      console.log(response.data)
     })
   }, [])
 
   const blogs = useSelector((state) => state.blogs)
-  const user = useSelector((state) => state.user)
+  const loggedUser = useSelector((state) => state.user)
 
   const handleLogin = async (event) => {
     event.preventDefault()
@@ -158,13 +157,16 @@ const App = () => {
 
   const blogFormRef = useRef()
 
-  
+  const userMatch = useMatch('/users/:id')
+  const userToRoute = userMatch
+    ? users.find(user => user.id === userMatch.params.id)
+    : null
 
   return (
     <div>
       <Headers.one value={'Bloglistapp'} />
       <Notification />
-        {user === null ? (
+        {loggedUser === null ? (
             <LoginForm
               username={username}
               password={password}
@@ -174,7 +176,7 @@ const App = () => {
             />
         ) : (
           <div>
-          <LoggedIn user={user} handleLogout={handleLogout} />
+          <LoggedIn user={loggedUser} handleLogout={handleLogout} />
             <Togglable buttonLabel="new blog" ref={blogFormRef}>
               <CreateBlogForm handleCreateBlog={handleCreateBlog} />
             </Togglable>
@@ -190,7 +192,7 @@ const App = () => {
                             blog={blog}
                             handleLike={handleLike}
                             handleDeleteBlog={handleDeleteBlog}
-                            username={user.username}
+                            username={loggedUser.username}
                           />
                         </TogglableBlogs>
                       </div>
@@ -199,7 +201,7 @@ const App = () => {
                 </div>
             } />
             <Route path='/users' element={<UsersRoute users={users} />} />
-            <Route path='/users/:id' element={<UserRoute users={users} />} />
+            <Route path='/users/:id' element={<UserRoute user={userToRoute} />} />
           </Routes>
           </div>
         )}

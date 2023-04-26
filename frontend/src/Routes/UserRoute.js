@@ -1,9 +1,9 @@
 import React from "react";
 import Headers from "../components/Headers";
 
-const UserRoute = ({ users }) => {
+const UserRoute = ({ user }) => {
 
-  const user = users[0]
+  console.log(user)
 
   if (!user) {
     return null

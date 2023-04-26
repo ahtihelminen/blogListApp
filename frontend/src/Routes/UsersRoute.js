@@ -7,7 +7,6 @@ import { Link } from 'react-router-dom'
 import Headers from "../components/Headers";
 
 const UsersRoute = ({ users }) => {
-  console.log(users)
   return (
     <div>
       <Headers.two value={'Users'} />

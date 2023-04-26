@@ -8,4 +8,8 @@ const two = ({ value }) => {
   return <h2>{value}</h2>
 }
 
-export default { one, two }
+const three = ({ value }) => {
+  return <h3>{value}</h3>
+}
+
+export default { one, two, three }

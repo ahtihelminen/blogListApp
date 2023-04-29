@@ -24,7 +24,17 @@ const likeBlog = async (updatedBlog) => {
   const config = {
     headers: { Authorization: token }
   }
-  const idUrl = `api/blogs/${updatedBlog.id}`
+  const idUrl = `api/blogs/like/${updatedBlog.id}`
+  const response = await axios.put(idUrl, updatedBlog, config)
+
+  return response
+}
+
+const commentBlog = async (updatedBlog) => {
+  const config = {
+    headers: { Authorization: token }
+  }
+  const idUrl = `api/blogs/comment/${updatedBlog.id}`
   const response = await axios.put(idUrl, updatedBlog, config)
 
   return response
@@ -40,4 +50,4 @@ const removeBlog = async (blog) => {
   return response
 }
 
-export default { setToken, getAll, postNewBlog, likeBlog, removeBlog }
+export default { setToken, getAll, postNewBlog, likeBlog, commentBlog, removeBlog }

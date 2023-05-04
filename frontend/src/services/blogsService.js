@@ -29,7 +29,6 @@ const likeBlog = async (updatedBlog) => {
 
   return response
 }
-
 const removeBlog = async (blog) => {
   const config = {
     headers: { Authorization: token }

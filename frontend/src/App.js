@@ -16,19 +16,20 @@ import Notification from './components/Notification'
 import Togglable from './components/Togglable'
 import Headers from './components/Headers'
 import TogglableBlogs from './components/TogglableBlogs'
+import CreateBlogForm from './components/BlogForm'
 
 import blogService from './services/blogsService'
 import loginService from './services/loginService'
 
 import './index.css'
-import CreateBlogForm from './components/BlogForm'
-import Blog from './components/Blog'
 
 import { setNotification } from './reducers/notificationReducer'
 import { initializeBlogs, likeBlog, deleteBlog } from './reducers/blogsReducer'
 import { setUser } from './reducers/userReducer'
+
 import UsersRoute from './Routes/UsersRoute'
 import UserRoute from './Routes/UserRoute'
+import BlogRoute from './Routes/BlogRoute'
 
 const App = () => {
   const [username, setUsername] = useState('')
@@ -162,6 +163,11 @@ const App = () => {
     ? users.find(user => user.id === userMatch.params.id)
     : null
 
+  const blogMatch = useMatch('/blogs/:id')
+  const blogToRoute = blogMatch
+    ? blogs.find(blog => blog.id === blogMatch.params.id)
+    : null
+
   return (
     <div>
       <Headers.one value={'Bloglistapp'} />
@@ -187,14 +193,9 @@ const App = () => {
                   <div>
                     {blogs.map((blog) => (
                       <div key={blog.id} className="blog">
-                        <TogglableBlogs buttonLabel="view" blog={blog}>
-                          <Blog
-                            blog={blog}
-                            handleLike={handleLike}
-                            handleDeleteBlog={handleDeleteBlog}
-                            username={loggedUser.username}
-                          />
-                        </TogglableBlogs>
+                        <Link to={`/blogs/${blog.id}`}>
+                          {blog.title} {blog.author}
+                        </Link>
                       </div>
                     ))}
                   </div>
@@ -202,6 +203,14 @@ const App = () => {
             } />
             <Route path='/users' element={<UsersRoute users={users} />} />
             <Route path='/users/:id' element={<UserRoute user={userToRoute} />} />
+            <Route path='/blogs/:id' element={
+              <BlogRoute
+                blog={blogToRoute}
+                handleLike={handleLike}
+                handleDeleteBlog={handleDeleteBlog}
+                username={loggedUser.username}
+              />
+            } />
           </Routes>
           </div>
         )}

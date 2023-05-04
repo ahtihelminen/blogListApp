@@ -1,6 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
+import Headers from './Headers'
+
 const Blog = ({ blog, handleLike, handleDeleteBlog, username }) => {
   const likeHandler = async (event) => {
     const updatedBlog = {
@@ -22,18 +24,22 @@ const Blog = ({ blog, handleLike, handleDeleteBlog, username }) => {
 
   return (
     <div className="blogTest">
+      <div>
+        <Headers.one value={`${blog.title} ${blog.author}`} />
+        <form onSubmit={likeHandler}>
+          <a href={`${blog.url}`}>{blog.url}</a> 
+          <br></br>
+          {blog.likes} &nbsp;{' '}
+          <button type="submit" id="like_button">
+            like
+          </button>{' '}
+          <br></br>
+        </form>
+      </div>
       {username === blog.user.username ? (
         <div>
-          <form onSubmit={likeHandler}>
-            {blog.url} <br></br>
-            {blog.likes} &nbsp;{' '}
-            <button type="submit" id="like_button">
-              like
-            </button>{' '}
-            <br></br>
-            {blog.user.name}
-          </form>
           <form onSubmit={deleteHandler}>
+            Added by you &nbsp;
             <button type="submit" id="remove_button">
               remove
             </button>
@@ -41,15 +47,7 @@ const Blog = ({ blog, handleLike, handleDeleteBlog, username }) => {
         </div>
       ) : (
         <div>
-          <form onSubmit={likeHandler}>
-            {blog.url} <br></br>
-            {blog.likes} &nbsp;{' '}
-            <button type="submit" id="like_button">
-              like
-            </button>{' '}
-            <br></br>
-            {blog.user.name}
-          </form>
+          Added by {blog.user.name}
         </div>
       )}
     </div>

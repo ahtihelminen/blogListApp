@@ -50,6 +50,14 @@ const Blog = ({ blog, handleLike, handleDeleteBlog, username }) => {
           Added by {blog.user.name}
         </div>
       )}
+      <Headers.three value={'comments'} />
+      <ul>
+        {blog.comments.map((comment) => (
+          <li>
+            {comment}
+          </li>
+        ))}
+      </ul>
     </div>
   )
 }

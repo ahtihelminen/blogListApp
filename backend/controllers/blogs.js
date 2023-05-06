@@ -87,7 +87,7 @@ blogRouter.put('/like/:id', async (request, response) => {
       error: 'content not found',
     })
   }
-
+  console.log('res true')
   response.status(204).json(body)
 })
 

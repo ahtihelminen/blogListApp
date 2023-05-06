@@ -1,5 +1,5 @@
 import axios from 'axios'
-const baseUrl = '/api/blogs'
+const baseUrl = '/blogs/api/blogs'
 
 let token = null
 
@@ -45,7 +45,7 @@ const removeBlog = async (blog) => {
   }
   const idUrl = `api/blogs/${blog.id}`
   const response = await axios.delete(idUrl, config)
-
+  
   return response
 }
 

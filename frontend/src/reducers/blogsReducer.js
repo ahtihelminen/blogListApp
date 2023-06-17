@@ -56,6 +56,18 @@ export const likeBlog = (blogToUpdate) => {
   }
 }
 
+export const commentBlog = (blogToUpdate) => {
+  return async (dispatch) => {
+    const response = await blogsService.commentBlog(blogToUpdate)
+    if (response.status === 204) {
+      dispatch(updateBlogs(response.data))
+      return true
+    } else {
+      return false
+    }
+  }
+}
+
 export const deleteBlog = (blogToDelete) => {
   return async (dispatch) => {
     const response = await blogsService.removeBlog(blogToDelete)

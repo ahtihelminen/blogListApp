@@ -10,8 +10,9 @@ import {
   useNavigate
 } from 'react-router-dom'
 
+import { Table } from 'react-bootstrap'
+
 import LoginForm from './components/LoginForm'
-import Notification from './components/Notification'
 import Togglable from './components/Togglable'
 import Headers from './components/Headers'
 import CreateBlogForm from './components/BlogForm'
@@ -23,7 +24,7 @@ import loginService from './services/loginService'
 import './index.css'
 
 import { setNotification } from './reducers/notificationReducer'
-import { initializeBlogs, likeBlog, deleteBlog } from './reducers/blogsReducer'
+import { initializeBlogs, likeBlog, commentBlog, deleteBlog } from './reducers/blogsReducer'
 import { setUser } from './reducers/userReducer'
 
 import UsersRoute from './Routes/UsersRoute'
@@ -88,6 +89,7 @@ const App = () => {
   const handleLogout = () => {
     dispatch(setUser(null))
     window.localStorage.removeItem('loggedUser')
+    navigate('/')
   }
 
   const handleCreateBlog = async (event, newBlog) => {
@@ -136,6 +138,26 @@ const App = () => {
     }
   }
 
+  const handleComment = async (event, updatedBlog) => {
+    event.preventDefault()
+    try {
+      if (await dispatch(commentBlog(updatedBlog))) {
+        setBlogUpdated(!blogUpdated)
+        dispatch(
+          setNotification(
+            `Blog ${updatedBlog.title} by ${updatedBlog.author} commented!`,
+            3,
+            5
+          )
+        )
+      }
+    } catch (exception) {
+      dispatch(
+        setNotification(`error while commenting: ${exception.message}`, 1, 5)
+      )
+    }
+  }
+
   const handleDeleteBlog = async (event, blog) => {
     event.preventDefault()
     try {
@@ -170,9 +192,7 @@ const App = () => {
     : null
 
   return (
-    <div>
-      <Headers.one value={'Bloglistapp'} />
-      <Notification />
+    <div className='container'>
         {loggedUser === null ? (
             <LoginForm
               username={username}
@@ -192,13 +212,22 @@ const App = () => {
                     <CreateBlogForm handleCreateBlog={handleCreateBlog} />
                   </Togglable>
                   <div>
-                    {blogs.map((blog) => (
-                      <div key={blog.id} className="blog">
-                        <Link to={`/blogs/${blog.id}`}>
-                          {blog.title} {blog.author}
-                        </Link>
-                      </div>
-                    ))}
+                    <Table striped>
+                      <tbody>
+                      {blogs.map((blog) => (
+                        <tr key={blog.id}>
+                          <td>
+                            <Link to={`/blogs/${blog.id}`}>
+                              {blog.title}
+                            </Link>
+                          </td>
+                          <td>
+                            {blog.author}
+                          </td>
+                        </tr>
+                      ))}
+                      </tbody>
+                    </Table>
                   </div>
                 </div>
             } />
@@ -225,6 +254,7 @@ const App = () => {
               <BlogRoute
                 blog={blogToRoute}
                 handleLike={handleLike}
+                handleComment={handleComment}
                 handleDeleteBlog={handleDeleteBlog}
                 username={loggedUser.username}
               />

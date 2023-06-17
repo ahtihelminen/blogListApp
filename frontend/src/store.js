@@ -10,6 +10,8 @@ const store = configureStore({
     blogs: blogsReducer,
     user: userReducer
   }
+  
 })
+
 
 export default store
